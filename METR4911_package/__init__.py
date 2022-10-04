@@ -741,13 +741,15 @@ class Finger(Item):
             mask_overlay_calibration_square_test = cv2.addWeighted(segment_calibration_square_test, self.alpha,
                                                             self.full_object_detect_img, 1 - self.alpha, 0)
 
-            cv2.imshow("1cm^2 calibration square", mask_overlay_calibration_square_test)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            # cv2.imshow("1cm^2 calibration square", mask_overlay_calibration_square_test)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
             
-            plt.imshow(cv2.cvtColor(mask_overlay_calibration_square_test, cv2.COLOR_BGR2RGB))
+            # plt.imshow(cv2.cvtColor(mask_overlay_calibration_square_test, cv2.COLOR_BGR2RGB))
             print("Number of pixels in 1cm line:", self.pixels_length_per_cm_FINGER)
-            print("Number of pixels in 1cm x 1cm square:", self.pixels_per_cm_squared_FINGER)
+            # print("Number of pixels in 1cm x 1cm square:", self.pixels_per_cm_squared_FINGER)
+            
+            return mask_overlay_calibration_square_test
         elif view == "TOP":
             ## Show 1cm^2 rectangle overlay (***TESTING***)
             # Third parameter is image object detect box
@@ -768,3 +770,98 @@ class Finger(Item):
             plt.imshow(cv2.cvtColor(mask_overlay_calibration_square_test, cv2.COLOR_BGR2RGB))
             print("Number of pixels in 1cm line:", self.pixels_length_per_cm_FINGER_TOP)
             print("Number of pixels in 1cm x 1cm square:", self.pixels_per_cm_squared_FINGER_TOP)
+            
+#======================================================================================================================================================
+#======================================================================================================================================================
+#======================================================================================================================================================    
+## Load Pre-trained Mask RCNN
+# Get file path of weights(.pb) and config (.pbtxt)
+frozen_pb = os.path.join("cv_dnn", "mask_rcnn_inception_v2_coco_2018_01_28", "frozen_inference_graph.pb")
+pb_txt = os.path.join("cv_dnn", "mask_rcnn_inception_v2_coco_2018_01_28.pbtxt")
+
+# Load the weights and the config of Mask RCNN
+net = cv2.dnn.readNetFromTensorflow(frozen_pb, pb_txt)
+
+def object_detect_img(img_path):
+    img = cv2.imread(img_path)
+    img = cv2.resize(img, (IMG_WIDTH,IMG_HEIGHT), interpolation = cv2.INTER_AREA)
+
+    original_img = img.copy() # Vanilla pure image, no overlays, boxes, labels, etc
+    overlay = img.copy() # For mask overlay
+    height, width, _ = img.shape
+
+    # 0 = open until any key is pressed, then close, any other number, in milliseconds, opens window in that duration
+    # cv2.imshow("Original Image ({},{})".format(width, height), img)
+    # cv2.waitKey(0)  
+    # cv2.destroyAllWindows()
+
+    # plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))  # Inline show image in notebook
+
+    # print("Width:", width)
+    # print("Height:", height)
+    
+    # For Static Image Only
+    object_detect_img, segmentation_img, box_list = object_detection_mask(img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows() 
+
+    # # Object Detection Box Image
+    # plt.imshow(cv2.cvtColor(object_detect_img, cv2.COLOR_BGR2RGB))
+    
+    # Create instances of Class Item and Finger from box_list of input image
+    objects = []
+    finger = None # Stays as None if no finger detected in side image
+    for box in box_list:
+        if box[1] == "Person":
+            finger = Finger(original_img, segmentation_img, box, object_detect_img)
+        else:
+            objects.append(Item(original_img, segmentation_img, box, object_detect_img))
+
+    # Sort items in the image left to right by x1 coordinate (top left corner of object detection box)
+    objects = sorted(objects, key=lambda item: item.get_rectangle_coods_top_left()[0])
+    
+    
+    print("---------------------- FINGER CLASS --------------------")
+    print(finger)
+
+    print("-------------------- FRUIT/VEGETABLES ------------------")
+    for item in objects:
+        print(item)
+        
+        
+    if finger:
+        print("FRUIT/VEGETABLE STATS") 
+        print("-------------------------------------------------")
+        for item in objects:
+            # Set calibration
+            item.set_calibration_pixel_finger(finger.pixels_length_per_cm_FINGER)
+
+            # Calculate volume side
+            item.set_volume_side()
+
+            # Calculate mass and calorie (might just combine the 3 set functions into one, but this is only the side though)
+            item.set_mass_and_calory()
+
+            print(f'{item.get_name()} area (cm2): {item.get_item_area_cm2()}')
+            print(f'{item.get_name()} volume (cm3): {item.get_volume_cm3()}')
+            print(f'{item.get_name()} mass (grams): {item.get_mass()}')
+            print(f'{item.get_name()} calories: {item.get_calorie()}')
+            print("-------------------------------------------------")
+    else:
+        print("No finger/person detected in side image")
+        
+    print()
+    fig, axe  = plt.subplots(2,2, figsize=(30, 30))
+    fig.tight_layout(h_pad=-50)
+    axe[0,0].xaxis.set_visible(False)
+    axe[0,0].yaxis.set_visible(False)
+    axe[0,1].xaxis.set_visible(False)
+    axe[0,1].yaxis.set_visible(False)
+    axe[1,0].xaxis.set_visible(False)
+    axe[1,0].yaxis.set_visible(False)
+    axe[1,1].xaxis.set_visible(False)
+    axe[1,1].yaxis.set_visible(False)
+    axe[0,0].imshow(cv2.cvtColor(original_img, cv2.COLOR_BGR2RGB))
+    axe[0,1].imshow(cv2.cvtColor(object_detect_img, cv2.COLOR_BGR2RGB))
+    axe[1,0].imshow(cv2.cvtColor(segmentation_img, cv2.COLOR_BGR2RGB))
+    axe[1,1].imshow(cv2.cvtColor(finger.debugging_calibration(), cv2.COLOR_BGR2RGB))
