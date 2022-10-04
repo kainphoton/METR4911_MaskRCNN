@@ -149,8 +149,8 @@ def object_detection_mask(img):
             cv2.fillPoly(roi, [cnt], color)
     
     ############################ Display output image on computer ############################
-    cv2.imshow("Frame", img)
-    cv2.imshow("Black Image", black_image)
+    # cv2.imshow("Frame", img)
+    # cv2.imshow("Black Image", black_image)
     
     return (img.copy(), black_image.copy(), box_list)
 
