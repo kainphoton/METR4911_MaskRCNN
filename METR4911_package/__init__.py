@@ -866,4 +866,4 @@ def object_detect_img(img_path):
     axe[1,0].imshow(cv2.cvtColor(object_detect_img, cv2.COLOR_BGR2RGB))
     axe[1,1].imshow(cv2.cvtColor(finger.debugging_calibration(), cv2.COLOR_BGR2RGB))
     
-    
+    return objects, finger, original_img, segmentation_img, object_detect_img
