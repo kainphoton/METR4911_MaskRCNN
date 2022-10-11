@@ -117,10 +117,14 @@ def object_detection_mask(img):
         label_box_height = 20   # Change Height of Label Box
         label_box_width = 75    # Change Width of Label Box
         
+        # Variable text font length for label box
+        label = LABELS[class_id]
+        textSize = cv2.getTextSize(label, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, thickness=1)
+        
         # Positions for box
         label_x = x - line_thickness // 2 
         label_y = y - label_box_height
-        label_x2 = x + label_box_width
+        label_x2 = label_x + textSize[0][0] + 5
         label_y2 = y
         
         # APPEND BOX_LIST AND THE LABEL INFO for name + calorie area
@@ -849,7 +853,7 @@ def object_detect_img(img_path):
             print(f'{item.get_name()} area (cm2): {item.get_item_area_cm2()}')
             print(f'{item.get_name()} volume (cm3): {item.get_volume_cm3()}')
             print(f'{item.get_name()} mass (grams): {item.get_mass()}')
-            print(f'{item.get_name()} calories: {item.get_calorie()}')
+            print(f'{item.get_name()} calories (kcal): {item.get_calorie()}')
             print("-------------------------------------------------")
     else:
         print("No finger/person detected in side image")
