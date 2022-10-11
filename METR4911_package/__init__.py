@@ -881,4 +881,71 @@ def object_detect_img(img_path):
     axe[1,1].imshow(cv2.cvtColor(finger.debugging_calibration(), cv2.COLOR_BGR2RGB))
     axe[2,0].imshow(cv2.cvtColor(finger.finger_2_lines, cv2.COLOR_BGR2RGB))
     
+    # Add the calorie image, Draw new label overtop existing with name + calorie
+    full_object_detect_calorie = object_detect_img.copy()
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    for item in objects:
+        # print(item.box)
+        label = f'{item.get_name()}: {round(item.get_calorie())} kcal' 
+        textSize = cv2.getTextSize(label, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, thickness=1)
+        label_right_padding = textSize[0][0] + 5
+        cv2.rectangle(full_object_detect_calorie, (item.box[7][:2]), (item.box[7][0]+label_right_padding, item.box[7][3]), COLORS[item.get_name()], cv2.FILLED)
+        cv2.putText(full_object_detect_calorie, label, (item.box[7][4:]), font, 0.5, (0,0,0), 1, cv2.LINE_AA)
+
+    # plt.imshow(cv2.cvtColor(full_object_detect_calorie, cv2.COLOR_BGR2RGB))  # Inline show image in notebook
+    axe[2,1].imshow(cv2.cvtColor(full_object_detect_calorie, cv2.COLOR_BGR2RGB))
+    
     return objects, finger, original_img, segmentation_img, object_detect_img
+
+
+def show_objects_itself_grey(demo_objects):
+    num_objects = len(demo_objects)
+
+    if num_objects == 1:
+        fig, axe  = plt.subplots(num_objects, 1, figsize=(30, 30))
+        fig.tight_layout(h_pad=5)
+        axe.xaxis.set_visible(False)
+        axe.yaxis.set_visible(False)
+        if demo_objects[0].get_name() == "Banana":
+            axe.imshow(cv2.cvtColor(demo_objects[0].finger_3_lines, cv2.COLOR_BGR2RGB))
+        else:
+            axe.imshow(cv2.cvtColor(demo_objects[0].object_itself_grey, cv2.COLOR_BGR2RGB))
+
+    elif num_objects == 2:
+        fig, axe  = plt.subplots(1, 2, figsize=(30, 30))
+        fig.tight_layout(h_pad=5)
+        axe[0].xaxis.set_visible(False)
+        axe[0].xaxis.set_visible(False)
+        axe[1].yaxis.set_visible(False)
+        axe[1].yaxis.set_visible(False)
+        
+        if demo_objects[0].get_name() == "Banana":
+            axe[0].imshow(cv2.cvtColor(demo_objects[0].finger_3_lines, cv2.COLOR_BGR2RGB))
+        else:
+            axe[0].imshow(cv2.cvtColor(demo_objects[0].object_itself_grey, cv2.COLOR_BGR2RGB))
+            
+        if demo_objects[1].get_name() == "Banana":
+            axe[1].imshow(cv2.cvtColor(demo_objects[1].finger_3_lines, cv2.COLOR_BGR2RGB))
+        else:
+            axe[1].imshow(cv2.cvtColor(demo_objects[1].object_itself_grey, cv2.COLOR_BGR2RGB))
+        
+    else:
+        index = m.ceil(num_objects/2)
+        # print("Index:",index)
+        fig, axe  = plt.subplots(index, 2, figsize=(30, 30))
+        fig.tight_layout(h_pad=5,w_pad=5)
+        
+        # Set axes off
+        for i in range(index):
+            axe[i,0].xaxis.set_visible(False)
+            axe[i,0].yaxis.set_visible(False)
+            axe[i,1].xaxis.set_visible(False)
+            axe[i,1].yaxis.set_visible(False)
+        
+        # Plot objects in each subplot
+        for num in range(num_objects):
+            if demo_objects[num].get_name() == "Banana":
+                axe[num//2,num%2].imshow(cv2.cvtColor(demo_objects[num].finger_3_lines, cv2.COLOR_BGR2RGB))
+            else:
+                axe[num//2,num%2].imshow(cv2.cvtColor(demo_objects[num].object_itself_grey, cv2.COLOR_BGR2RGB))
+            # # print(num//2,num%2)
