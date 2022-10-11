@@ -106,7 +106,7 @@ def object_detection_mask(img):
         new_box = list(box.copy())
         new_box[3:] = (x, y, x2, y2)
         new_box[1] = LABELS[int(class_id)]
-        box_list.append(new_box) # Get the box data
+        
         
         # Draw rectangle box around detected object
         line_thickness = 2
@@ -122,6 +122,10 @@ def object_detection_mask(img):
         label_y = y - label_box_height
         label_x2 = x + label_box_width
         label_y2 = y
+        
+        # APPEND BOX_LIST AND THE LABEL INFO for name + calorie area
+        new_box.append((label_x, label_y, label_x2, label_y2, x + pad_x, y - pad_y))
+        box_list.append(new_box) # Get the box data
         
         # Draw Box
         cv2.rectangle(img, (label_x,label_y), (label_x2,label_y2), color, cv2.FILLED)
@@ -175,7 +179,7 @@ class Item:
         self.full_object_detect_img = object_detect_img.copy()
         self.full_object_detect_img_TOP = None
 
-        # box [0,label,confidence,x1,y1,x2,y2] (SIDE + TOP)
+        # box [0,label,confidence,x1,y1,x2,y2,(label_x, label_y, label_x2, label_y2, x + pad_x, y - pad_y)] (SIDE + TOP) + 
         self.box = box.copy()
         self.box_TOP = None 
         
@@ -184,7 +188,7 @@ class Item:
         self.name = box[1]
         self.confidence = box[2]
         self.x1, self.y1 = box[3:5]
-        self.x2, self.y2 = box[5:]
+        self.x2, self.y2 = box[5:7]
         self.name_TOP = None
         self.confidence_TOP = None
         self.x1_TOP, self.y1_TOP = None, None
