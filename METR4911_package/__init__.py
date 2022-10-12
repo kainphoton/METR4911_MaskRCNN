@@ -594,7 +594,7 @@ class Finger(Item):
         super().__init__(full_original_img, full_segmentation_img, box, object_detect_img)
         
         # Offset x-direction ratio (window width) from outer to inner lines
-        self.inner_line_offset_ratio = 0.1 
+        self.inner_line_offset_ratio = 0.125 
         
         # Ratio of window height threshold for outer line
         self.height_ratio_threshold = 0.05 
@@ -790,8 +790,11 @@ pb_txt = os.path.join("cv_dnn", "mask_rcnn_inception_v2_coco_2018_01_28.pbtxt")
 # Load the weights and the config of Mask RCNN
 net = cv2.dnn.readNetFromTensorflow(frozen_pb, pb_txt)
 
-def object_detect_img(img_path):
-    img = cv2.imread(img_path)
+def object_detect_img(img_path, view="static"):
+    if view == "static":
+        img = cv2.imread(img_path)
+    else:
+        img = img_path # from webcam frame 
     img = cv2.resize(img, (IMG_WIDTH,IMG_HEIGHT), interpolation = cv2.INTER_AREA)
 
     original_img = img.copy() # Vanilla pure image, no overlays, boxes, labels, etc
