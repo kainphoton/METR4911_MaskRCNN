@@ -787,7 +787,7 @@ class Finger(Item):
 frozen_pb = os.path.join("cv_dnn", "mask_rcnn_inception_v2_coco_2018_01_28", "frozen_inference_graph.pb")
 pb_txt = os.path.join("cv_dnn", "mask_rcnn_inception_v2_coco_2018_01_28.pbtxt")
 
-# Load the weights and the config of Mask RCNN
+# Load the weights and the config of Mask RCNN 
 net = cv2.dnn.readNetFromTensorflow(frozen_pb, pb_txt)
 
 def object_detect_img(img_path, view="static"):
