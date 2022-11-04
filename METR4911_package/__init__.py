@@ -18,7 +18,7 @@ SCORE_THRESHOLD = 0.75
 
 ############################ Global variables used in Item() and Finger(Item) class ############################
 # Using Median Adjustment Values: 4/11/22 (it changed for some reason, so had to redo excel sheet)
-ITEM_VOLUME_ADJUSTMENT = {"Banana": 2.545, "Apple": 2.49, "Carrot": 1.0, "Orange": 1.95, "Broccoli": 1.0}
+ITEM_VOLUME_ADJUSTMENT = {"Banana": 3.64, "Apple": 2.86, "Carrot": 1.0, "Orange": 1.95, "Broccoli": 1.0}
 
 # Shape Category [different shape will have their own volume equation]
 SPHERE_SHAPE = ['Apple', 'Orange']
