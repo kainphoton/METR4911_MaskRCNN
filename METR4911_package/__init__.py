@@ -50,6 +50,8 @@ IMG_WIDTH, IMG_HEIGHT  = (640, 480)
 
 # Define plot size for all plots
 plt.rcParams['figure.figsize'] = [6.4*1.75, 4.8*1.75]
+plt.rc('xtick', labelsize=20)
+plt.rc('ytick', labelsize=20) 
 
 """ 
     Modified Source code from: https://www.youtube.com/watch?v=8m8m4oWsp8M
@@ -864,18 +866,18 @@ def object_detect_img(img_path, view="static"):
     print()
     fig, axe  = plt.subplots(3, 2, figsize=(30, 30))
     fig.tight_layout(h_pad=5)
-    axe[0,0].xaxis.set_visible(False)
-    axe[0,0].yaxis.set_visible(False)
-    axe[0,1].xaxis.set_visible(False)
-    axe[0,1].yaxis.set_visible(False)
-    axe[1,0].xaxis.set_visible(False)
-    axe[1,0].yaxis.set_visible(False)
-    axe[1,1].xaxis.set_visible(False)
-    axe[1,1].yaxis.set_visible(False)
-    axe[2,0].xaxis.set_visible(False)
-    axe[2,0].yaxis.set_visible(False)
-    axe[2,1].xaxis.set_visible(False)
-    axe[2,1].yaxis.set_visible(False)
+    # axe[0,0].xaxis.set_visible(False)
+    # axe[0,0].yaxis.set_visible(False)
+    # axe[0,1].xaxis.set_visible(False)
+    # axe[0,1].yaxis.set_visible(False)
+    # axe[1,0].xaxis.set_visible(False)
+    # axe[1,0].yaxis.set_visible(False)
+    # axe[1,1].xaxis.set_visible(False)
+    # axe[1,1].yaxis.set_visible(False)
+    # axe[2,0].xaxis.set_visible(False)
+    # axe[2,0].yaxis.set_visible(False)
+    # axe[2,1].xaxis.set_visible(False)
+    # axe[2,1].yaxis.set_visible(False)
     
     
     axe[0,0].imshow(cv2.cvtColor(original_img, cv2.COLOR_BGR2RGB))
@@ -907,8 +909,8 @@ def show_objects_itself_grey(demo_objects):
     if num_objects == 1:
         fig, axe  = plt.subplots(num_objects, 1, figsize=(30, 30))
         fig.tight_layout(h_pad=5)
-        axe.xaxis.set_visible(False)
-        axe.yaxis.set_visible(False)
+        # axe.xaxis.set_visible(False)
+        # axe.yaxis.set_visible(False)
         if demo_objects[0].get_name() == "Banana":
             axe.imshow(cv2.cvtColor(demo_objects[0].finger_3_lines, cv2.COLOR_BGR2RGB))
         else:
@@ -917,10 +919,11 @@ def show_objects_itself_grey(demo_objects):
     elif num_objects == 2:
         fig, axe  = plt.subplots(1, 2, figsize=(30, 30))
         fig.tight_layout(h_pad=5)
-        axe[0].xaxis.set_visible(False)
-        axe[0].xaxis.set_visible(False)
-        axe[1].yaxis.set_visible(False)
-        axe[1].yaxis.set_visible(False)
+        # axe[0].xaxis.set_visible(False)
+        # axe[0].xaxis.set_visible(False)
+        # axe[1].yaxis.set_visible(False)
+        # axe[1].yaxis.set_visible(False)
+        
         
         if demo_objects[0].get_name() == "Banana":
             axe[0].imshow(cv2.cvtColor(demo_objects[0].finger_3_lines, cv2.COLOR_BGR2RGB))
@@ -939,11 +942,11 @@ def show_objects_itself_grey(demo_objects):
         fig.tight_layout(h_pad=5,w_pad=5)
         
         # Set axes off
-        for i in range(index):
-            axe[i,0].xaxis.set_visible(False)
-            axe[i,0].yaxis.set_visible(False)
-            axe[i,1].xaxis.set_visible(False)
-            axe[i,1].yaxis.set_visible(False)
+        # for i in range(index):
+            # axe[i,0].xaxis.set_visible(False)
+            # axe[i,0].yaxis.set_visible(False)
+            # axe[i,1].xaxis.set_visible(False)
+            # axe[i,1].yaxis.set_visible(False)
         
         # Plot objects in each subplot
         for num in range(num_objects):
