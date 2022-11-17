@@ -73,5 +73,5 @@ Open the main Jupyter File `main.ipynb` and change the `img_file` and `img_path`
     
 
 
-![png](output_3_1.png)
+![png](results/apple_orange_banana_result_moderate-quality.png)
 
