@@ -35,7 +35,7 @@ pip install -r requirements.txt
 
 Open the main Jupyter File `main.ipynb` and change the `img_file` and `img_path` variables to a desired input image and run the main Jupyter file. Output may not always work properly due to finger and fruit positioning, lighting in the image and the background.
 
-## Example Output
+## Example Output (Moderately Accurate)
 
     ---------------------- FINGER CLASS --------------------
     SIDE: [0.0, 'Person', 0.75483173, 0, 181, 224, 300, (-1, 161, 58, 181, 2, 177)]
